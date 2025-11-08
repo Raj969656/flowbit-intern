@@ -1,0 +1,13 @@
+{
+  "name": "flowbit-intern",
+  "private": true,
+  "workspaces": [
+    "apps/*",
+    "services/*"
+  ],
+  "scripts": {
+    "dev:api": "npm --workspace=@flowbit/api run dev",
+    "dev:vanna": "npm --workspace=@flowbit/vanna run dev",
+    "dev:web": "npm --workspace=@flowbit/web run dev"
+  }
+}
