@@ -1,33 +1,28 @@
-# Node modules and dependencies
+# Node modules
 node_modules/
 apps/api/node_modules/
 apps/web/node_modules/
 apps/services/vanna/__pycache__/
 apps/services/vanna/.venv/
 
-# Build and output files
+# Build files
 .next/
 dist/
 build/
 coverage/
 *.log
 
-# Environment files
+# Env files
 .env
 .env.local
 .env.production
 .env.development
 
-# OS / IDE files
+# IDE/OS
+.vscode/
 .DS_Store
 Thumbs.db
-.vscode/
-*.swp
 
 # Python cache
 __pycache__/
 *.pyc
-
-# Misc
-*.sqlite
-*.lock
