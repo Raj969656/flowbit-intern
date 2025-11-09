@@ -1,33 +1,31 @@
-# ---- Build stage ----
+# ---- Stage 1: Builder ----
 FROM node:20-bullseye-slim AS builder
 
 WORKDIR /app
 
-# Copy root manifests and install all dependencies
+# Copy only package manifests first
 COPY package*.json ./
-RUN npm ci
 
-# Copy the rest of the project files
+# Install dependencies (including TypeScript)
+RUN npm ci && npm install typescript @types/node --save-dev
+
+# Copy entire project
 COPY . .
 
-# Move into the API app
+# Move into API app and compile
 WORKDIR /app/apps/api
 
-# Ensure TypeScript is installed
-RUN npm install typescript @types/node --save-dev
-
-# Compile TypeScript
+RUN chmod +x ../../node_modules/.bin/tsc
 RUN npx tsc -p tsconfig.json
 
-# ---- Runtime stage ----
+# ---- Stage 2: Runtime ----
 FROM node:20-bullseye-slim
 
 WORKDIR /app
 
-# Copy compiled output from builder
 COPY --from=builder /app /app
 
 EXPOSE 4000
 
-# Run Prisma + start server
-CMD ["sh", "-c", "npx prisma generate --schema=../../prisma/schema.prisma && npx prisma migrate deploy --schema=../../prisma/schema.prisma && node apps/api/dist/index.js"]
+# ✅ Use absolute schema path (fixes your current error)
+CMD ["sh", "-c", "npx prisma generate --schema=/app/prisma/schema.prisma && npx prisma migrate deploy --schema=/app/prisma/schema.prisma && node apps/api/dist/index.js"]
