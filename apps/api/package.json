@@ -5,8 +5,8 @@
   "private": true,
  "scripts": {
   "prebuild": "npm install prisma @prisma/client typescript",
-  "build": "DATABASE_URL=$DATABASE_URL npx prisma generate --schema=../../prisma/schema.prisma && DATABASE_URL=$DATABASE_URL npx prisma migrate deploy --schema=../../prisma/schema.prisma && npx tsc -p tsconfig.json",
-  "start": "node dist/index.js",
+  "build": "npx tsc -p tsconfig.json",
+  "start": "npx prisma generate --schema=../../prisma/schema.prisma && npx prisma migrate deploy --schema=../../prisma/schema.prisma && node dist/index.js",
   "dev": "ts-node-dev --respawn --transpile-only src/index.ts"
 },
   "dependencies": {
