@@ -3,13 +3,12 @@
   "name": "@flowbit/api",
   "version": "1.0.0",
   "private": true,
-  "scripts": {
+ "scripts": {
   "prebuild": "npm install prisma @prisma/client typescript",
-  "build": "export DATABASE_URL=$DATABASE_URL && npx prisma generate --schema=../../prisma/schema.prisma && npx prisma migrate deploy --schema=../../prisma/schema.prisma && npx tsc -p tsconfig.json",
+  "build": "DATABASE_URL=$DATABASE_URL npx prisma generate --schema=../../prisma/schema.prisma && DATABASE_URL=$DATABASE_URL npx prisma migrate deploy --schema=../../prisma/schema.prisma && npx tsc -p tsconfig.json",
   "start": "node dist/index.js",
   "dev": "ts-node-dev --respawn --transpile-only src/index.ts"
-}
-,
+},
   "dependencies": {
     "express": "^4.19.2",
     "cors": "^2.8.5",
