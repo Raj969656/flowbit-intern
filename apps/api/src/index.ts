@@ -1,8 +1,5 @@
 import dotenv from "dotenv";
-dotenv.config(); // ✅ must be called first, before anything else
-if (!process.env.DATABASE_URL) {
-  console.error("❌ DATABASE_URL is not loaded from environment");
-}
+dotenv.config(); // ✅ must be first — before using process.env
 
 import express from "express";
 import cors from "cors";
@@ -14,7 +11,12 @@ app.use(express.json());
 
 const prisma = new PrismaClient();
 
-// /stats
+// Health check (to prevent Render errors)
+app.get("/", (req, res) => {
+  res.send("✅ Flowbit API is running!");
+});
+
+// Stats endpoint
 app.get("/stats", async (req, res) => {
   const totalSpend = await prisma.invoice.aggregate({ _sum: { total: true }});
   const totalInvoices = await prisma.invoice.count();
@@ -26,6 +28,7 @@ app.get("/stats", async (req, res) => {
   });
 });
 
+// Top vendors
 app.get("/vendors/top10", async (req, res) => {
   const result = await prisma.$queryRaw`
     SELECT v.name, SUM(i.total) AS spend
@@ -38,17 +41,31 @@ app.get("/vendors/top10", async (req, res) => {
   res.json(result);
 });
 
+// Chat with Data
 app.post("/chat-with-data", async (req, res) => {
-  const { prompt } = req.body;
- const VANNA_API = process.env.VANNA_API_BASE_URL;
-const resp = await fetch(`${VANNA_API}/generate-sql`, {
-    method: "POST",
-    headers: {"Content-Type":"application/json"},
-    body: JSON.stringify({ prompt })
-  });
-  const data = await resp.json();
-  res.json(data);
+  try {
+    const { prompt } = req.body;
+    const VANNA_API = process.env.VANNA_API_BASE_URL;
+    if (!VANNA_API) {
+      return res.status(500).json({ error: "VANNA_API_BASE_URL not configured" });
+    }
+
+    const resp = await fetch(`${VANNA_API}/generate-sql`, {
+      method: "POST",
+      headers: { "Content-Type": "application/json" },
+      body: JSON.stringify({ prompt })
+    });
+
+    if (!resp.ok) throw new Error(`Vanna error: ${resp.statusText}`);
+
+    const data = await resp.json();
+    res.json(data);
+  } catch (error: any) {
+    console.error("❌ Chat-with-data error:", error.message);
+    res.status(500).json({ error: error.message });
+  }
 });
 
+// Start server
 const port = process.env.PORT || 4000;
-app.listen(port, () => console.log("✅ API running on port", port));
+app.listen(port, () => console.log(`✅ API running on port ${port}`));
