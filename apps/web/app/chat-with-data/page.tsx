@@ -30,6 +30,7 @@ export default function ChatPage() {
     } finally {
       setLoading(false);
     }
+    
   }
 
   return (
