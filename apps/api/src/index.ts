@@ -35,7 +35,8 @@ app.get("/vendors/top10", async (req, res) => {
 
 app.post("/chat-with-data", async (req, res) => {
   const { prompt } = req.body;
-  const resp = await fetch("http://localhost:8000/generate-sql", {
+ const VANNA_API = process.env.VANNA_API_BASE_URL;
+const resp = await fetch(`${VANNA_API}/generate-sql`, {
     method: "POST",
     headers: {"Content-Type":"application/json"},
     body: JSON.stringify({ prompt })
