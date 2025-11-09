@@ -2,11 +2,18 @@
   "name": "@flowbit/web",
   "private": true,
   "version": "1.0.0",
+<<<<<<< HEAD
   "scripts": {
   "build": "npm install prisma @prisma/client && npx prisma generate --schema=../../prisma/schema.prisma && npx prisma migrate deploy --schema=../../prisma/schema.prisma",
   "start": "npx ts-node src/index.ts"
 },
 
+=======
+   "scripts": {
+  "build": "npm install prisma @prisma/client && npx prisma generate --schema=../../prisma/schema.prisma && npx prisma migrate deploy --schema=../../prisma/schema.prisma",
+  "start": "npx ts-node src/index.ts"
+},
+>>>>>>> 383f520fe7aa9f5dea7991b4a6b531f42e618857
   "dependencies": {
     "chart.js": "^4.4.0",
     "next": "14.2.13",
