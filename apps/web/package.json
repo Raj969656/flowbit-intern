@@ -3,10 +3,10 @@
   "private": true,
   "version": "1.0.0",
   "scripts": {
-    "dev": "next dev -p 3000",
-    "build": "next build",
-    "start": "next start -p 3000"
-  },
+  "build": "npm install prisma @prisma/client && npx prisma generate --schema=../../prisma/schema.prisma && npx prisma migrate deploy --schema=../../prisma/schema.prisma",
+  "start": "npx ts-node src/index.ts"
+},
+
   "dependencies": {
     "chart.js": "^4.4.0",
     "next": "14.2.13",
