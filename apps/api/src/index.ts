@@ -1,12 +1,17 @@
+import dotenv from "dotenv";
+dotenv.config(); // ✅ must be called first, before anything else
+if (!process.env.DATABASE_URL) {
+  console.error("❌ DATABASE_URL is not loaded from environment");
+}
+
 import express from "express";
 import cors from "cors";
-import dotenv from "dotenv";
 import { PrismaClient } from "@prisma/client";
-dotenv.config();
 
 const app = express();
 app.use(cors());
 app.use(express.json());
+
 const prisma = new PrismaClient();
 
 // /stats
